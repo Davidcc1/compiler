@@ -49,6 +49,8 @@ end { return(END); }
 fi { return(FI); } 
 if { return(IF); } 
 in { return(IN); } 
+function { return(FUNCTION);}
+procedure { return(PROCEDURE);}
 integer { return(INTEGER); } 
 let { return(LET); } 
 read { return(READ); } 

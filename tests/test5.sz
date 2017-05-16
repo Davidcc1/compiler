@@ -1,0 +1,6 @@
+
+let
+	integer n, m, x.
+in 
+write 1;
+write n;

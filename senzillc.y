@@ -76,14 +76,14 @@ SEMANTIC RECORDS
 /*========================================================================= 
 TOKENS 
 =========================================================================*/ 
-%start program 
+
 %token <intval> NUMBER /* Simple integer */ 
 %token <id> IDENTIFIER /* Simple identifier */
 %token <str> LABEL
 %token <lbls> IF WHILE /* For backpatching labels */ 
-%token SKIP THEN ELSE FI DO END DOT
+%token SKIP THEN ELSE FI DO END DOT FUNCTION
 %token INTEGER READ WRITE LET IN COMENT
-%token ASSGNOP LPAREN RPAREN STR
+%token ASSGNOP LPAREN RPAREN STR PROCEDURE
 
 
 /*========================================================================= 
@@ -101,14 +101,21 @@ GRAMMAR RULES for the Simple language
 
 program : LET declarations IN { gen_code( DATA, data_location() - 1 ); } 
           commands END { gen_code( HALT, 0 ); YYACCEPT; } 
-; 
+;
+ 
+declarations : declaration '.'
+	| declarations declaration '.' 
+;
 
-declarations : /* empty */ 
-    | INTEGER id_seq IDENTIFIER '.' { install( $3 ); } 
+declaration : /* empty */ 
+    | INTEGER id_seq IDENTIFIER { install( $3 ); }
+    | INTEGER id_seq IDENTIFIER '[' NUMBER ']' { /*do something*/ }
+    | FUNCTION IDENTIFIER LPAREN id_seq RPAREN ':' INTEGER {/*DO SOETHING*/}
 ; 
 
 id_seq : /* empty */ 
     | id_seq IDENTIFIER ',' { install( $2 ); } 
+    | id_seq IDENTIFIER '[' NUMBER ']' ',' { /*do something*/ }
 ; 
 
 commands : /* empty */ 
@@ -125,7 +132,8 @@ command : SKIP
    } commands FI { back_patch( $1->for_goto, GOTO, gen_label() ); } 
    | WHILE { $1 = (struct lbs *) newlblrec(); $1->for_goto = gen_label(); } 
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto ); 
-   back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); } 
+   back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
+   | PROCEDURE IDENTIFIER LPAREN id_seq RPAREN "{" commands "}" {}
 ;
 
 bool_exp : exp '<' exp { gen_code( LT, 0 ); } 
@@ -145,14 +153,6 @@ exp : NUMBER { gen_code( LD_INT, $1 ); }
 
 %% 
 
-//| expr {}
-//expr : sexpr ';' {printf("%s\n", $1);}
-//;
-//sexpr 	:  	LABEL { $$ = $1;}	
-//		|	sexpr '.' sexpr {/*char* s=malloc(sizeof(char)*(strlen($1)+strlen($3)+1));strcpy(s,$1); strcat(s,$3);$$=s;*/}
-//		|	STR LPAREN exp RPAREN { /*char* s=malloc(sizeof(char)*(2));sprintf(s, "%d \n",$3);$$ = s; */}
-//;
-
 extern struct instruction code[ MAX_MEMORY ];
 
 /*========================================================================= 
@@ -166,7 +166,7 @@ int main( int argc, char *argv[] )
     return -1;
   }
   yyin = fopen( argv[1], "r" ); 
-  /*yydebug = 1;*/ 
+  //yydebug = 1;
   errors = 0; 
   printf("Senzill Compiler\n");
   yyparse (); 
