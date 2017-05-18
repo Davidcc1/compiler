@@ -57,16 +57,18 @@ extern int yydebug;
     DO = 267,
     END = 268,
     DOT = 269,
-    INTEGER = 270,
-    READ = 271,
-    WRITE = 272,
-    LET = 273,
-    IN = 274,
-    COMENT = 275,
-    ASSGNOP = 276,
-    LPAREN = 277,
-    RPAREN = 278,
-    STR = 279
+    FUNCTION = 270,
+    INTEGER = 271,
+    READ = 272,
+    WRITE = 273,
+    LET = 274,
+    IN = 275,
+    COMENT = 276,
+    ASSGNOP = 277,
+    LPAREN = 278,
+    RPAREN = 279,
+    STR = 280,
+    PROCEDURE = 281
   };
 #endif
 
@@ -82,7 +84,7 @@ union YYSTYPE
    char *str;
    struct lbs *lbls; /* For backpatching */ 
 
-#line 86 "senzillc.tab.h" /* yacc.c:1909  */
+#line 88 "senzillc.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
