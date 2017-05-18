@@ -109,7 +109,7 @@ Integer [0-9]+
 %%
 
 int yywrap(void){ 
-   return 0; 
+   return 1; 
 } 
 
 int main( int argc, char *argv[] ) {

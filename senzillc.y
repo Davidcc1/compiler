@@ -37,11 +37,11 @@ struct lbs * newlblrec() /* Allocate space for the labels */
 /*------------------------------------------------------------------------- 
 Install identifier & check if previously defined. 
 -------------------------------------------------------------------------*/ 
-void install ( char *sym_name ) 
+void install ( char *sym_name, int length ) 
 { 
   symrec *s = getsym (sym_name); 
   if (s == 0) 
-    s = putsym (sym_name); 
+    s = putsym (sym_name, length); 
   else { 
     char message[ 100 ];
     sprintf( message, "%s is already defined\n", sym_name ); 
@@ -108,14 +108,14 @@ declarations : declaration '.'
 ;
 
 declaration : /* empty */ 
-    | INTEGER id_seq IDENTIFIER { install( $3 ); }
-    | INTEGER id_seq IDENTIFIER '[' NUMBER ']' { /*do something*/ }
+    | INTEGER id_seq IDENTIFIER { install( $3 , 1); }
+    | INTEGER id_seq IDENTIFIER '[' NUMBER ']' { install($3,$5);}
     | FUNCTION IDENTIFIER LPAREN id_seq RPAREN ':' INTEGER {/*DO SOETHING*/}
 ; 
 
 id_seq : /* empty */ 
-    | id_seq IDENTIFIER ',' { install( $2 ); } 
-    | id_seq IDENTIFIER '[' NUMBER ']' ',' { /*do something*/ }
+    | id_seq IDENTIFIER ',' { install( $2, 1); } 
+    | id_seq IDENTIFIER '[' NUMBER ']' ',' { install($2,$4); }
 ; 
 
 commands : /* empty */ 
@@ -126,6 +126,7 @@ command : SKIP
    | READ IDENTIFIER { gen_code( READ_INT, context_check( $2 ) ); } 
    | WRITE exp { gen_code( WRITE_INT, 0 ); } 
    | IDENTIFIER ASSGNOP exp { gen_code( STORE, context_check( $1 ) ); } 
+   | IDENTIFIER '[' exp ']' ASSGNOP exp { gen_code( LD_INT, context_check( $1 )); gen_code( STORE_SUB, 0/*context_check( $1 )*/ ); } 
    | IF bool_exp { $1 = (struct lbs *) newlblrec(); $1->for_jmp_false = reserve_loc(); } 
    THEN commands { $1->for_goto = reserve_loc(); } ELSE { 
      back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); 
@@ -143,6 +144,7 @@ bool_exp : exp '<' exp { gen_code( LT, 0 ); }
 
 exp : NUMBER { gen_code( LD_INT, $1 ); } 
    | IDENTIFIER { gen_code( LD_VAR, context_check( $1 ) ); } 
+   | IDENTIFIER '[' exp ']' { gen_code( LD_INT, context_check( $1 )); gen_code( LD_SUB, 0);}
    | exp '+' exp { gen_code( ADD, 0 ); } 
    | exp '-' exp { gen_code( SUB, 0 ); } 
    | exp '*' exp { gen_code( MULT, 0 ); } 

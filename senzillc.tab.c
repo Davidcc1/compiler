@@ -102,11 +102,11 @@ struct lbs * newlblrec() /* Allocate space for the labels */
 /*------------------------------------------------------------------------- 
 Install identifier & check if previously defined. 
 -------------------------------------------------------------------------*/ 
-void install ( char *sym_name ) 
+void install ( char *sym_name, int length ) 
 { 
   symrec *s = getsym (sym_name); 
   if (s == 0) 
-    s = putsym (sym_name); 
+    s = putsym (sym_name, length); 
   else { 
     char message[ 100 ];
     sprintf( message, "%s is already defined\n", sym_name ); 
@@ -1366,13 +1366,13 @@ yyreduce:
 
   case 7:
 #line 111 "senzillc.y" /* yacc.c:1646  */
-    { install( (yyvsp[0].id) ); }
+    { install( (yyvsp[0].id) , 1); }
 #line 1371 "senzillc.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 112 "senzillc.y" /* yacc.c:1646  */
-    { /*do something*/ }
+    { install((yyvsp[-3].id),(yyvsp[-1].intval));}
 #line 1377 "senzillc.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1384,13 +1384,13 @@ yyreduce:
 
   case 11:
 #line 117 "senzillc.y" /* yacc.c:1646  */
-    { install( (yyvsp[-1].id) ); }
+    { install( (yyvsp[-1].id), 1); }
 #line 1389 "senzillc.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 118 "senzillc.y" /* yacc.c:1646  */
-    { /*do something*/ }
+    { install((yyvsp[-4].id),(yyvsp[-2].intval)); }
 #line 1395 "senzillc.tab.c" /* yacc.c:1646  */
     break;
 

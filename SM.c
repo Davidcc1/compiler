@@ -11,7 +11,8 @@ Modified by: Jordi Planes
 char *op_name[] = {"halt", "store", "jmp_false", "goto", "call", "ret",
 		   "data", "ld_int", "ld_var", 
 		   "in_int", "out_int", 
-		   "lt", "eq", "gt", "add", "sub", "mult", "div", "pwr" }; 
+		   "lt", "eq", "gt", "add", "sub", "mult", "div", "pwr",
+                   "ld_sub", "store_sub" }; 
 
 /* CODE Array */ 
 struct instruction code[MAX_MEMORY];
@@ -35,8 +36,10 @@ void fetch_execute_cycle()
 { 
   do { 
 #ifndef NDEBUG    
-    printf( "PC = %3d IR.arg = %8d AR = %3d Top = %3d,%8d\n", 
-	    pc, ir.arg, ar, top, stack[top]); 
+    int i;
+    printf( "PC = %3d IR.op = %-8s IR.arg = %8d AR = %3d Top = %3d,%8d\n", 
+	    pc, op_name[(int) ir.op], ir.arg, ar, top, stack[top]); 
+    for( i = 0; i <= top; i++ ) printf("%2d: |%3d|\n", i, stack[i]);
 #endif
     /* Fetch */ 
     ir = code[pc++]; 
@@ -46,12 +49,12 @@ void fetch_execute_cycle()
     case READ_INT : printf( "Input: " ); 
       scanf( "%d", &stack[ar+ir.arg] ); break; 
     case WRITE_INT : printf( "Output: %d\n", stack[top--] ); break; 
-    case STORE : stack[ir.arg] = stack[top--]; break; 
+    case STORE : stack[ar+ir.arg] = stack[top--]; break; 
     case JMP_FALSE : if ( stack[top--] == 0 ) 
 	pc = ir.arg; 
       break; 
     case GOTO : pc = ir.arg; break; 
-    case CALL : stack[++top] = pc+1; pc = ir.arg; break;
+    case CALL : stack[++top] = pc; pc = ir.arg; break;
     case RET : pc = stack[top--]; break;
     case DATA : top = top + ir.arg; break; 
     case LD_INT : stack[++top] = ir.arg; break; 
@@ -83,6 +86,12 @@ void fetch_execute_cycle()
     case PWR : stack[top-1] = stack[top-1] * stack[top]; 
       top--; 
       break; 
+    case LD_SUB : stack[top-1] = stack[ stack[top] + stack[top-1] ];
+      top--;
+      break;
+    case STORE_SUB : stack[ stack[top] + stack[top-1] ] = stack[top-2];
+      top -= 2;
+      break;
     default : printf( "%d Internal Error: Memory Dump\n", ir.op ); 
       break; 
     } 
