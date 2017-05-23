@@ -86,10 +86,9 @@ void fetch_execute_cycle()
     case PWR : stack[top-1] = stack[top-1] * stack[top]; 
       top--; 
       break; 
-    case LD_SUB : stack[top-1] = stack[ stack[top] + stack[top-1] ];
-      top--;
+    case LD_SUB : stack[top] = stack[ stack[top] + ar+ir.arg];
       break;
-    case STORE_SUB : stack[ stack[top] + stack[top-1] ] = stack[top-2];
+    case STORE_SUB : stack[stack[top] + ar+ir.arg] = stack[top-1];
       top -= 2;
       break;
     default : printf( "%d Internal Error: Memory Dump\n", ir.op ); 
