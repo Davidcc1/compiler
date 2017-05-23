@@ -1,9 +1,6 @@
 include test4_2.sz
 
-let 
-   integer n,m,x. 
-in
- 
+integer n,m,x.  
 read n; 
 x := 1;
 m := 1;
@@ -14,6 +11,5 @@ end;
    skip; 
    write m; 
    write n;
-   write x; 
-end 
+   write x;
 

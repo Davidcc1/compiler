@@ -1,6 +1,13 @@
 
-let
-	integer n, m, x.
-in 
-write 1;
-write n;
+integer n, m, x.
+read n;  
+x := 1;
+m := 1;
+while x < n do 
+   m := x*m; 
+   x := x+1; 
+end;
+ 
+skip; 
+write m; 
+

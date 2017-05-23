@@ -1,7 +1,4 @@
 
-let
-	integer n.
-in 
+integer n. 
 write 1;
 write n;
-end;

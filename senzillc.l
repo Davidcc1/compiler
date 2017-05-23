@@ -18,6 +18,7 @@ C-libraries and Token definitions
 
 int i ;
 char * buff;
+int num_line = 1;
 
 #define MAX_INCLUDE_DEPTH 10
 YY_BUFFER_STATE include_stack[MAX_INCLUDE_DEPTH];
@@ -92,7 +93,8 @@ write { return(WRITE); }
  }
 
 
-[ \t\n]+ /* eat up whitespace */ 
+\n      num_line++;
+[ \t]+ /* eat up whitespace */ 
 . { return(yytext[0]);} 
 
 %% 

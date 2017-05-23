@@ -82,7 +82,7 @@ TOKENS
 %token <str> LABEL
 %token <lbls> IF WHILE /* For backpatching labels */ 
 %token SKIP THEN ELSE FI DO END DOT FUNCTION
-%token INTEGER READ WRITE LET IN COMENT
+%token INTEGER READ WRITE LET IN
 %token ASSGNOP LPAREN RPAREN STR PROCEDURE
 
 
@@ -99,8 +99,8 @@ GRAMMAR RULES for the Simple language
 
 %% 
 
-program : LET declarations IN { gen_code( DATA, data_location() - 1 ); } 
-          commands END { gen_code( HALT, 0 ); YYACCEPT; } 
+program : declarations { gen_code( DATA, data_location() - 1 ); } 
+          commands { gen_code( HALT, 0 ); YYACCEPT; } 
 ;
  
 declarations : declaration '.'
@@ -110,16 +110,17 @@ declarations : declaration '.'
 declaration : /* empty */ 
     | INTEGER id_seq IDENTIFIER { install( $3 , 1); }
     | INTEGER id_seq IDENTIFIER '[' NUMBER ']' { install($3,$5);}
-    | FUNCTION IDENTIFIER LPAREN id_seq RPAREN ':' INTEGER {/*DO SOETHING*/}
+    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER {/*DO SOETHING*/}
 ; 
 
 id_seq : /* empty */ 
     | id_seq IDENTIFIER ',' { install( $2, 1); } 
     | id_seq IDENTIFIER '[' NUMBER ']' ',' { install($2,$4); }
+    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ',' {/*DO SOETHING*/}
 ; 
 
 commands : /* empty */ 
-    | commands command ';' 
+    | commands command ';'
 ; 
 
 command : SKIP 
@@ -134,7 +135,9 @@ command : SKIP
    | WHILE { $1 = (struct lbs *) newlblrec(); $1->for_goto = gen_label(); } 
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto ); 
    back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
-   | PROCEDURE IDENTIFIER LPAREN id_seq RPAREN "{" commands "}" {}
+   | PROCEDURE IDENTIFIER '(' id_seq ')' DO { /*$1->for_jmp_false = reserve_loc();*/}
+   commands { /*$1->for_goto = reserve_loc(); */}
+   END {/* gen_code( GOTO, $1->for_goto ); back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); */}
 ;
 
 bool_exp : exp '<' exp { gen_code( LT, 0 ); } 
@@ -185,10 +188,11 @@ int main( int argc, char *argv[] )
 /*========================================================================= 
 YYERROR 
 =========================================================================*/ 
+extern int num_line;
 int yyerror ( char *s ) /* Called by yyparse on error */ 
 { 
   errors++; 
-  printf ("%s\n", s); 
+  printf ("%d: %s\n", num_line, s); 
   return 0;
 }
 /**************************** End Grammar File ***************************/ 

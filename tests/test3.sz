@@ -1,7 +1,4 @@
-
-let 
-   integer n,m,x. 
-in 
+integer n,m,x. 
 read n; 
 x := 1;
 m := 1;
@@ -13,5 +10,4 @@ end;
    #write m; 
    write n;
    write x; 
-end 
 

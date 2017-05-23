@@ -1,6 +1,5 @@
-let 
-   integer n,m,x,p[5].
-in
+
+integer n,m,x,p[5].
  
 read n; 
 x := 0;
@@ -17,4 +16,3 @@ end;
    write p[1]; 
    write n;
    write x; 
-end 
