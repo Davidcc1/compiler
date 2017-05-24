@@ -18,6 +18,7 @@ C Libraries, Symbol Table, Code Generator & other C code
 
 int yyerror(char *);
 int yylex();
+int funcio;
 
 int errors; /* Error Count */ 
 /*------------------------------------------------------------------------- 
@@ -26,7 +27,8 @@ The following support backpatching
 struct lbs /* Labels for data, if and while */ 
 { 
   int for_goto; 
-  int for_jmp_false; 
+  int for_jmp_false;
+  int for_fun; 
 }; 
 
 struct lbs * newlblrec() /* Allocate space for the labels */ 
@@ -80,10 +82,10 @@ TOKENS
 %token <intval> NUMBER /* Simple integer */ 
 %token <id> IDENTIFIER /* Simple identifier */
 %token <str> LABEL
-%token <lbls> IF WHILE /* For backpatching labels */ 
+%token <lbls> IF WHILE PROCEDURE /* For backpatching labels */ 
 %token SKIP THEN ELSE FI DO END DOT FUNCTION
 %token INTEGER READ WRITE LET IN
-%token ASSGNOP LPAREN RPAREN STR PROCEDURE
+%token ASSGNOP LPAREN RPAREN STR MAIN
 
 
 /*========================================================================= 
@@ -135,9 +137,14 @@ command : SKIP
    | WHILE { $1 = (struct lbs *) newlblrec(); $1->for_goto = gen_label(); } 
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto ); 
    back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
-   | PROCEDURE IDENTIFIER '(' id_seq ')' DO { /*$1->for_jmp_false = reserve_loc();*/}
-   commands { /*$1->for_goto = reserve_loc(); */}
-   END {/* gen_code( GOTO, $1->for_goto ); back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); */}
+   | PROCEDURE IDENTIFIER '(' id_seq ')' '{' 
+   { 	$1 = (struct lbs *) newlblrec(); /*$1->for_fun = gen_label();*/   install($2,1); }
+   commands { }
+   '}' {/*back_patch( $1->for_fun, GOTO, gen_label()+2);*/ gen_code( RET, 0);}
+   | IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 )-1 ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
+   | MAIN { back_patch( 0, GOTO, gen_label());}
+   
+   
 ;
 
 bool_exp : exp '<' exp { gen_code( LT, 0 ); } 
@@ -154,6 +161,7 @@ exp : NUMBER { gen_code( LD_INT, $1 ); }
    | exp '/' exp { gen_code( DIV, 0 ); } 
    | exp '^' exp { gen_code( PWR, 0 ); } 
    | '(' exp ')' 
+   | IDENTIFIER '(' ')' { gen_code( GOTO , funcio ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
 ;
 
 %% 

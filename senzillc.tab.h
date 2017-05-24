@@ -50,24 +50,25 @@ extern int yydebug;
     LABEL = 260,
     IF = 261,
     WHILE = 262,
-    SKIP = 263,
-    THEN = 264,
-    ELSE = 265,
-    FI = 266,
-    DO = 267,
-    END = 268,
-    DOT = 269,
-    FUNCTION = 270,
-    INTEGER = 271,
-    READ = 272,
-    WRITE = 273,
-    LET = 274,
-    IN = 275,
-    ASSGNOP = 276,
-    LPAREN = 277,
-    RPAREN = 278,
-    STR = 279,
-    PROCEDURE = 280
+    PROCEDURE = 263,
+    SKIP = 264,
+    THEN = 265,
+    ELSE = 266,
+    FI = 267,
+    DO = 268,
+    END = 269,
+    DOT = 270,
+    FUNCTION = 271,
+    INTEGER = 272,
+    READ = 273,
+    WRITE = 274,
+    LET = 275,
+    IN = 276,
+    ASSGNOP = 277,
+    LPAREN = 278,
+    RPAREN = 279,
+    STR = 280,
+    MAIN = 281
   };
 #endif
 
@@ -76,14 +77,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 69 "senzillc.y" /* yacc.c:1909  */
+#line 71 "senzillc.y" /* yacc.c:1909  */
  
    int intval; /* Integer values */ 
    char *id; /* Identifiers */ 
    char *str;
    struct lbs *lbls; /* For backpatching */ 
 
-#line 87 "senzillc.tab.h" /* yacc.c:1909  */
+#line 88 "senzillc.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
