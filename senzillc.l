@@ -40,6 +40,7 @@ REGULAR EXPRESSIONS defining the tokens for the Simple language
 %% 
 
 include BEGIN(incl);
+goes: {return GO;}
 main { return MAIN; }
 ":=" { return(ASSGNOP); } 
 {DIGIT}+ { yylval.intval = atoi( yytext ); 

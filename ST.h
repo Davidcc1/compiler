@@ -11,5 +11,6 @@ struct symrec
 typedef struct symrec symrec; 
 
 symrec * getsym (char *sym_name);
+symrec * putsym2 (char *sym_name,int length);
 symrec * putsym (char *sym_name,int length);
 

@@ -68,7 +68,8 @@ extern int yydebug;
     LPAREN = 278,
     RPAREN = 279,
     STR = 280,
-    MAIN = 281
+    MAIN = 281,
+    GO = 282
   };
 #endif
 
@@ -77,14 +78,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 71 "senzillc.y" /* yacc.c:1909  */
+#line 83 "senzillc.y" /* yacc.c:1909  */
  
    int intval; /* Integer values */ 
    char *id; /* Identifiers */ 
    char *str;
    struct lbs *lbls; /* For backpatching */ 
 
-#line 88 "senzillc.tab.h" /* yacc.c:1909  */
+#line 89 "senzillc.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -38,6 +38,18 @@ symrec * putsym (char *sym_name,int length)
   ptr->next = (struct symrec *)sym_table; 
   sym_table = ptr; 
   return ptr; 
+}
+
+symrec * putsym2 (char *sym_name,int length) 
+{ 
+  symrec *ptr; 
+  ptr = (symrec *) malloc (sizeof(symrec)*length); 
+  ptr->name = (char *) malloc (strlen(sym_name)+1); 
+  strcpy (ptr->name,sym_name); 
+  ptr->offset = gen_label(); 
+  ptr->next = (struct symrec *)sym_table; 
+  sym_table = ptr; 
+  return ptr; 
 } 
 
 symrec * getsym (char *sym_name) 

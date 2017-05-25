@@ -51,6 +51,18 @@ void install ( char *sym_name, int length )
   } 
 } 
 
+void install2 ( char *sym_name, int length ) 
+{ 
+  symrec *s = getsym (sym_name); 
+  if (s == 0) 
+    s = putsym2 (sym_name, length); 
+  else { 
+    char message[ 100 ];
+    sprintf( message, "%s is already defined\n", sym_name ); 
+    yyerror( message );
+  } 
+} 
+
 /*------------------------------------------------------------------------- 
 If identifier is defined, generate code 
 -------------------------------------------------------------------------*/ 
@@ -85,7 +97,7 @@ TOKENS
 %token <lbls> IF WHILE PROCEDURE /* For backpatching labels */ 
 %token SKIP THEN ELSE FI DO END DOT FUNCTION
 %token INTEGER READ WRITE LET IN
-%token ASSGNOP LPAREN RPAREN STR MAIN
+%token ASSGNOP LPAREN RPAREN STR MAIN GO
 
 
 /*========================================================================= 
@@ -101,8 +113,9 @@ GRAMMAR RULES for the Simple language
 
 %% 
 
-program : declarations { gen_code( DATA, data_location() - 1 ); } 
-          commands { gen_code( HALT, 0 ); YYACCEPT; } 
+program : 	GO { reserve_loc();}
+			declarations { gen_code( DATA, data_location() - 1 ); } 
+          	commands { gen_code( HALT, 0 ); YYACCEPT; } 
 ;
  
 declarations : declaration '.'
@@ -129,7 +142,7 @@ command : SKIP
    | READ IDENTIFIER { gen_code( READ_INT, context_check( $2 ) ); } 
    | WRITE exp { gen_code( WRITE_INT, 0 ); } 
    | IDENTIFIER ASSGNOP exp { gen_code( STORE, context_check( $1 ) ); } 
-   | IDENTIFIER '[' exp ']' ASSGNOP exp { gen_code( LD_INT, context_check( $1 )); gen_code( STORE_SUB, 0/*context_check( $1 )*/ ); } 
+   | IDENTIFIER '[' exp ']' ASSGNOP exp { gen_code( LD_INT, context_check( $1 )); gen_code( STORE_SUB, 0 ); } 
    | IF bool_exp { $1 = (struct lbs *) newlblrec(); $1->for_jmp_false = reserve_loc(); } 
    THEN commands { $1->for_goto = reserve_loc(); } ELSE { 
      back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); 
@@ -138,10 +151,10 @@ command : SKIP
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto ); 
    back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
    | PROCEDURE IDENTIFIER '(' id_seq ')' '{' 
-   { 	$1 = (struct lbs *) newlblrec(); /*$1->for_fun = gen_label();*/   install($2,1); }
+   { 	$1 = (struct lbs *) newlblrec(); /*$1->for_fun = gen_label();*/   install2($2,1); }
    commands { }
-   '}' {/*back_patch( $1->for_fun, GOTO, gen_label()+2);*/ gen_code( RET, 0);}
-   | IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 )-1 ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
+   '}' { gen_code( RET, 0); }
+   | IDENTIFIER '(' exp ')' { gen_code( CALL , context_check( $1 ) ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
    | MAIN { back_patch( 0, GOTO, gen_label());}
    
    
@@ -152,16 +165,17 @@ bool_exp : exp '<' exp { gen_code( LT, 0 ); }
    | exp '>' exp { gen_code( GT, 0 ); } 
 ;
 
-exp : NUMBER { gen_code( LD_INT, $1 ); } 
-   | IDENTIFIER { gen_code( LD_VAR, context_check( $1 ) ); } 
-   | IDENTIFIER '[' exp ']' { gen_code( LD_INT, context_check( $1 )); gen_code( LD_SUB, 0);}
-   | exp '+' exp { gen_code( ADD, 0 ); } 
-   | exp '-' exp { gen_code( SUB, 0 ); } 
-   | exp '*' exp { gen_code( MULT, 0 ); } 
-   | exp '/' exp { gen_code( DIV, 0 ); } 
-   | exp '^' exp { gen_code( PWR, 0 ); } 
-   | '(' exp ')' 
-   | IDENTIFIER '(' ')' { gen_code( GOTO , funcio ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
+exp :/*empty*/ 
+	|NUMBER { gen_code( LD_INT, $1 ); } 
+   	| IDENTIFIER { gen_code( LD_VAR, context_check( $1 ) ); } 
+   	| IDENTIFIER '[' exp ']' { gen_code( LD_INT, context_check( $1 )); gen_code( LD_SUB, 0);}
+   	| exp '+' exp { gen_code( ADD, 0 ); } 
+   	| exp '-' exp { gen_code( SUB, 0 ); } 
+   	| exp '*' exp { gen_code( MULT, 0 ); } 
+   	| exp '/' exp { gen_code( DIV, 0 ); } 
+   	| exp '^' exp { gen_code( PWR, 0 ); } 
+   	| '(' exp ')' 
+   	| IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 ) ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
 ;
 
 %% 
