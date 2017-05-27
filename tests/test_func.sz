@@ -1,0 +1,23 @@
+goes:
+
+function f():integer.
+function l():integer.
+integer n,m,x,p[5],k.
+
+procedure f(){
+write k*10;
+}
+
+main(){
+
+read k;
+f();
+
+x := 0;
+m := 1;
+p[0] := 0;
+
+   skip;
+   write p[0];
+   write x;
+}

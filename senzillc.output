@@ -1,4 +1,4 @@
-Terminales no usados en gramática
+Terminales no usados en la gramática
 
    LABEL
    DOT
@@ -17,116 +17,122 @@ Gramática
 
     2 $@2: %empty
 
-    3 program: GO $@1 declarations $@2 commands
+    3 $@3: %empty
 
-    4 declarations: declaration '.'
-    5             | declarations declaration '.'
+    4 $@4: %empty
 
-    6 declaration: %empty
-    7            | INTEGER id_seq IDENTIFIER
-    8            | INTEGER id_seq IDENTIFIER '[' NUMBER ']'
-    9            | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER
+    5 program: GO $@1 declarations $@2 functions MAIN '{' $@3 commands $@4 '}'
 
-   10 id_seq: %empty
-   11       | id_seq IDENTIFIER ','
-   12       | id_seq IDENTIFIER '[' NUMBER ']' ','
-   13       | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ','
+    6 functions: %empty
+    7          | function functions
 
-   14 commands: %empty
-   15         | commands command ';'
+    8 $@5: %empty
 
-   16 command: SKIP
-   17        | READ IDENTIFIER
-   18        | WRITE exp
-   19        | IDENTIFIER ASSGNOP exp
-   20        | IDENTIFIER '[' exp ']' ASSGNOP exp
+    9 $@6: %empty
 
-   21 $@3: %empty
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@5 commands $@6 '}'
 
-   22 $@4: %empty
+   11 declarations: declaration '.'
+   12             | declarations declaration '.'
 
-   23 $@5: %empty
+   13 declaration: %empty
+   14            | INTEGER id_seq IDENTIFIER
+   15            | INTEGER id_seq IDENTIFIER '[' NUMBER ']'
+   16            | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER
 
-   24 command: IF bool_exp $@3 THEN commands $@4 ELSE $@5 commands FI
+   17 id_seq: %empty
+   18       | id_seq IDENTIFIER ','
+   19       | id_seq IDENTIFIER '[' NUMBER ']' ','
+   20       | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ','
 
-   25 $@6: %empty
+   21 commands: %empty
+   22         | commands command ';'
 
-   26 $@7: %empty
+   23 command: SKIP
+   24        | READ IDENTIFIER
+   25        | WRITE exp
+   26        | IDENTIFIER ASSGNOP exp
+   27        | IDENTIFIER '[' exp ']' ASSGNOP exp
 
-   27 command: WHILE $@6 bool_exp $@7 DO commands END
+   28 $@7: %empty
 
-   28 $@8: %empty
+   29 $@8: %empty
 
-   29 $@9: %empty
+   30 $@9: %empty
 
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@8 commands $@9 '}'
-   31        | IDENTIFIER '(' exp ')'
-   32        | MAIN
+   31 command: IF bool_exp $@7 THEN commands $@8 ELSE $@9 commands FI
 
-   33 bool_exp: exp '<' exp
-   34         | exp '=' exp
-   35         | exp '>' exp
+   32 $@10: %empty
 
-   36 exp: %empty
-   37    | NUMBER
-   38    | IDENTIFIER
-   39    | IDENTIFIER '[' exp ']'
-   40    | exp '+' exp
-   41    | exp '-' exp
-   42    | exp '*' exp
-   43    | exp '/' exp
-   44    | exp '^' exp
-   45    | '(' exp ')'
-   46    | IDENTIFIER '(' ')'
+   33 $@11: %empty
+
+   34 command: WHILE $@10 bool_exp $@11 DO commands END
+   35        | IDENTIFIER '(' exp ')'
+
+   36 bool_exp: exp '<' exp
+   37         | exp '=' exp
+   38         | exp '>' exp
+
+   39 exp: %empty
+   40    | NUMBER
+   41    | IDENTIFIER
+   42    | IDENTIFIER '[' exp ']'
+   43    | exp '+' exp
+   44    | exp '-' exp
+   45    | exp '*' exp
+   46    | exp '/' exp
+   47    | exp '^' exp
+   48    | '(' exp ')'
+   49    | IDENTIFIER '(' ')'
 
 
 Terminales con las reglas donde aparecen
 
 $end (0) 0
-'(' (40) 9 13 30 31 45 46
-')' (41) 9 13 30 31 45 46
-'*' (42) 42
-'+' (43) 40
-',' (44) 11 12 13
-'-' (45) 41
-'.' (46) 4 5
-'/' (47) 43
-':' (58) 9 13
-';' (59) 15
-'<' (60) 33
-'=' (61) 34
-'>' (62) 35
-'[' (91) 8 12 20 39
-']' (93) 8 12 20 39
-'^' (94) 44
-'{' (123) 30
-'}' (125) 30
+'(' (40) 10 16 20 35 48 49
+')' (41) 10 16 20 35 48 49
+'*' (42) 45
+'+' (43) 43
+',' (44) 18 19 20
+'-' (45) 44
+'.' (46) 11 12
+'/' (47) 46
+':' (58) 16 20
+';' (59) 22
+'<' (60) 36
+'=' (61) 37
+'>' (62) 38
+'[' (91) 15 19 27 42
+']' (93) 15 19 27 42
+'^' (94) 47
+'{' (123) 5 10
+'}' (125) 5 10
 error (256)
-NUMBER (258) 8 12 37
-IDENTIFIER (259) 7 8 9 11 12 13 17 19 20 30 31 38 39 46
+NUMBER (258) 15 19 40
+IDENTIFIER (259) 10 14 15 16 18 19 20 24 26 27 35 41 42 49
 LABEL (260)
-IF (261) 24
-WHILE (262) 27
-PROCEDURE (263) 30
-SKIP (264) 16
-THEN (265) 24
-ELSE (266) 24
-FI (267) 24
-DO (268) 27
-END (269) 27
+IF (261) 31
+WHILE (262) 34
+PROCEDURE (263) 10
+SKIP (264) 23
+THEN (265) 31
+ELSE (266) 31
+FI (267) 31
+DO (268) 34
+END (269) 34
 DOT (270)
-FUNCTION (271) 9 13
-INTEGER (272) 7 8 9 13
-READ (273) 17
-WRITE (274) 18
+FUNCTION (271) 16 20
+INTEGER (272) 14 15 16 20
+READ (273) 24
+WRITE (274) 25
 LET (275)
 IN (276)
-ASSGNOP (277) 19 20
+ASSGNOP (277) 26 27
 LPAREN (278)
 RPAREN (279)
 STR (280)
-MAIN (281) 32
-GO (282) 3
+MAIN (281) 5
+GO (282) 5
 
 
 No terminales con las reglas donde aparecen
@@ -134,44 +140,52 @@ No terminales con las reglas donde aparecen
 $accept (46)
     en la izquierda: 0
 program (47)
-    en la izquierda: 3, en la derecha: 0
+    en la izquierda: 5, en la derecha: 0
 $@1 (48)
-    en la izquierda: 1, en la derecha: 3
+    en la izquierda: 1, en la derecha: 5
 $@2 (49)
-    en la izquierda: 2, en la derecha: 3
-declarations (50)
-    en la izquierda: 4 5, en la derecha: 3 5
-declaration (51)
-    en la izquierda: 6 7 8 9, en la derecha: 4 5
-id_seq (52)
-    en la izquierda: 10 11 12 13, en la derecha: 7 8 9 11 12 13 30
-commands (53)
-    en la izquierda: 14 15, en la derecha: 3 15 24 27 30
-command (54)
-    en la izquierda: 16 17 18 19 20 24 27 30 31 32, en la derecha:
-    15
-$@3 (55)
-    en la izquierda: 21, en la derecha: 24
-$@4 (56)
-    en la izquierda: 22, en la derecha: 24
-$@5 (57)
-    en la izquierda: 23, en la derecha: 24
-$@6 (58)
-    en la izquierda: 25, en la derecha: 27
-$@7 (59)
-    en la izquierda: 26, en la derecha: 27
-$@8 (60)
-    en la izquierda: 28, en la derecha: 30
-$@9 (61)
-    en la izquierda: 29, en la derecha: 30
-bool_exp (62)
-    en la izquierda: 33 34 35, en la derecha: 24 27
-exp (63)
-    en la izquierda: 36 37 38 39 40 41 42 43 44 45 46, en la derecha:
-    18 19 20 31 33 34 35 39 40 41 42 43 44 45
+    en la izquierda: 2, en la derecha: 5
+$@3 (50)
+    en la izquierda: 3, en la derecha: 5
+$@4 (51)
+    en la izquierda: 4, en la derecha: 5
+functions (52)
+    en la izquierda: 6 7, en la derecha: 5 7
+function (53)
+    en la izquierda: 10, en la derecha: 7
+$@5 (54)
+    en la izquierda: 8, en la derecha: 10
+$@6 (55)
+    en la izquierda: 9, en la derecha: 10
+declarations (56)
+    en la izquierda: 11 12, en la derecha: 5 12
+declaration (57)
+    en la izquierda: 13 14 15 16, en la derecha: 11 12
+id_seq (58)
+    en la izquierda: 17 18 19 20, en la derecha: 10 14 15 16 18 19
+    20
+commands (59)
+    en la izquierda: 21 22, en la derecha: 5 10 22 31 34
+command (60)
+    en la izquierda: 23 24 25 26 27 31 34 35, en la derecha: 22
+$@7 (61)
+    en la izquierda: 28, en la derecha: 31
+$@8 (62)
+    en la izquierda: 29, en la derecha: 31
+$@9 (63)
+    en la izquierda: 30, en la derecha: 31
+$@10 (64)
+    en la izquierda: 32, en la derecha: 34
+$@11 (65)
+    en la izquierda: 33, en la derecha: 34
+bool_exp (66)
+    en la izquierda: 36 37 38, en la derecha: 31 34
+exp (67)
+    en la izquierda: 39 40 41 42 43 44 45 46 47 48 49, en la derecha:
+    25 26 27 35 36 37 38 42 43 44 45 46 47 48
 
 
-State 0
+Estado 0
 
     0 $accept: . program $end
 
@@ -180,1188 +194,1240 @@ State 0
     program  ir al estado 2
 
 
-State 1
+Estado 1
 
-    3 program: GO . $@1 declarations $@2 commands
+    5 program: GO . $@1 declarations $@2 functions MAIN '{' $@3 commands $@4 '}'
 
     $default  reduce usando la regla 1 ($@1)
 
     $@1  ir al estado 3
 
 
-State 2
+Estado 2
 
     0 $accept: program . $end
 
     $end  desplazar e ir al estado 4
 
 
-State 3
+Estado 3
 
-    3 program: GO $@1 . declarations $@2 commands
+    5 program: GO $@1 . declarations $@2 functions MAIN '{' $@3 commands $@4 '}'
 
     FUNCTION  desplazar e ir al estado 5
     INTEGER   desplazar e ir al estado 6
 
-    $default  reduce usando la regla 6 (declaration)
+    $default  reduce usando la regla 13 (declaration)
 
     declarations  ir al estado 7
     declaration   ir al estado 8
 
 
-State 4
+Estado 4
 
     0 $accept: program $end .
 
     $default  aceptar
 
 
-State 5
+Estado 5
 
-    9 declaration: FUNCTION . IDENTIFIER '(' id_seq ')' ':' INTEGER
+   16 declaration: FUNCTION . IDENTIFIER '(' id_seq ')' ':' INTEGER
 
     IDENTIFIER  desplazar e ir al estado 9
 
 
-State 6
+Estado 6
 
-    7 declaration: INTEGER . id_seq IDENTIFIER
-    8            | INTEGER . id_seq IDENTIFIER '[' NUMBER ']'
+   14 declaration: INTEGER . id_seq IDENTIFIER
+   15            | INTEGER . id_seq IDENTIFIER '[' NUMBER ']'
 
     FUNCTION  desplazar e ir al estado 10
 
-    $default  reduce usando la regla 10 (id_seq)
+    $default  reduce usando la regla 17 (id_seq)
 
     id_seq  ir al estado 11
 
 
-State 7
+Estado 7
 
-    3 program: GO $@1 declarations . $@2 commands
-    5 declarations: declarations . declaration '.'
+    5 program: GO $@1 declarations . $@2 functions MAIN '{' $@3 commands $@4 '}'
+   12 declarations: declarations . declaration '.'
 
     FUNCTION  desplazar e ir al estado 5
     INTEGER   desplazar e ir al estado 6
 
-    '.'       reduce usando la regla 6 (declaration)
+    '.'       reduce usando la regla 13 (declaration)
     $default  reduce usando la regla 2 ($@2)
 
     $@2          ir al estado 12
     declaration  ir al estado 13
 
 
-State 8
+Estado 8
 
-    4 declarations: declaration . '.'
+   11 declarations: declaration . '.'
 
     '.'  desplazar e ir al estado 14
 
 
-State 9
+Estado 9
 
-    9 declaration: FUNCTION IDENTIFIER . '(' id_seq ')' ':' INTEGER
+   16 declaration: FUNCTION IDENTIFIER . '(' id_seq ')' ':' INTEGER
 
     '('  desplazar e ir al estado 15
 
 
-State 10
+Estado 10
 
-   13 id_seq: FUNCTION . IDENTIFIER '(' id_seq ')' ':' INTEGER ','
+   20 id_seq: FUNCTION . IDENTIFIER '(' id_seq ')' ':' INTEGER ','
 
     IDENTIFIER  desplazar e ir al estado 16
 
 
-State 11
+Estado 11
 
-    7 declaration: INTEGER id_seq . IDENTIFIER
-    8            | INTEGER id_seq . IDENTIFIER '[' NUMBER ']'
-   11 id_seq: id_seq . IDENTIFIER ','
-   12       | id_seq . IDENTIFIER '[' NUMBER ']' ','
+   14 declaration: INTEGER id_seq . IDENTIFIER
+   15            | INTEGER id_seq . IDENTIFIER '[' NUMBER ']'
+   18 id_seq: id_seq . IDENTIFIER ','
+   19       | id_seq . IDENTIFIER '[' NUMBER ']' ','
 
     IDENTIFIER  desplazar e ir al estado 17
 
 
-State 12
+Estado 12
 
-    3 program: GO $@1 declarations $@2 . commands
+    5 program: GO $@1 declarations $@2 . functions MAIN '{' $@3 commands $@4 '}'
 
-    $default  reduce usando la regla 14 (commands)
+    PROCEDURE  desplazar e ir al estado 18
 
-    commands  ir al estado 18
+    $default  reduce usando la regla 6 (functions)
 
-
-State 13
-
-    5 declarations: declarations declaration . '.'
-
-    '.'  desplazar e ir al estado 19
+    functions  ir al estado 19
+    function   ir al estado 20
 
 
-State 14
+Estado 13
 
-    4 declarations: declaration '.' .
+   12 declarations: declarations declaration . '.'
 
-    $default  reduce usando la regla 4 (declarations)
-
-
-State 15
-
-    9 declaration: FUNCTION IDENTIFIER '(' . id_seq ')' ':' INTEGER
-
-    FUNCTION  desplazar e ir al estado 10
-
-    $default  reduce usando la regla 10 (id_seq)
-
-    id_seq  ir al estado 20
+    '.'  desplazar e ir al estado 21
 
 
-State 16
+Estado 14
 
-   13 id_seq: FUNCTION IDENTIFIER . '(' id_seq ')' ':' INTEGER ','
+   11 declarations: declaration '.' .
 
-    '('  desplazar e ir al estado 21
-
-
-State 17
-
-    7 declaration: INTEGER id_seq IDENTIFIER .
-    8            | INTEGER id_seq IDENTIFIER . '[' NUMBER ']'
-   11 id_seq: id_seq IDENTIFIER . ','
-   12       | id_seq IDENTIFIER . '[' NUMBER ']' ','
-
-    '['  desplazar e ir al estado 22
-    ','  desplazar e ir al estado 23
-
-    $default  reduce usando la regla 7 (declaration)
+    $default  reduce usando la regla 11 (declarations)
 
 
-State 18
+Estado 15
 
-    3 program: GO $@1 declarations $@2 commands .
-   15 commands: commands . command ';'
-
-    IDENTIFIER  desplazar e ir al estado 24
-    IF          desplazar e ir al estado 25
-    WHILE       desplazar e ir al estado 26
-    PROCEDURE   desplazar e ir al estado 27
-    SKIP        desplazar e ir al estado 28
-    READ        desplazar e ir al estado 29
-    WRITE       desplazar e ir al estado 30
-    MAIN        desplazar e ir al estado 31
-
-    $default  reduce usando la regla 3 (program)
-
-    command  ir al estado 32
-
-
-State 19
-
-    5 declarations: declarations declaration '.' .
-
-    $default  reduce usando la regla 5 (declarations)
-
-
-State 20
-
-    9 declaration: FUNCTION IDENTIFIER '(' id_seq . ')' ':' INTEGER
-   11 id_seq: id_seq . IDENTIFIER ','
-   12       | id_seq . IDENTIFIER '[' NUMBER ']' ','
-
-    IDENTIFIER  desplazar e ir al estado 33
-    ')'         desplazar e ir al estado 34
-
-
-State 21
-
-   13 id_seq: FUNCTION IDENTIFIER '(' . id_seq ')' ':' INTEGER ','
+   16 declaration: FUNCTION IDENTIFIER '(' . id_seq ')' ':' INTEGER
 
     FUNCTION  desplazar e ir al estado 10
 
-    $default  reduce usando la regla 10 (id_seq)
+    $default  reduce usando la regla 17 (id_seq)
 
-    id_seq  ir al estado 35
+    id_seq  ir al estado 22
 
 
-State 22
+Estado 16
 
-    8 declaration: INTEGER id_seq IDENTIFIER '[' . NUMBER ']'
-   12 id_seq: id_seq IDENTIFIER '[' . NUMBER ']' ','
+   20 id_seq: FUNCTION IDENTIFIER . '(' id_seq ')' ':' INTEGER ','
 
-    NUMBER  desplazar e ir al estado 36
+    '('  desplazar e ir al estado 23
 
 
-State 23
+Estado 17
 
-   11 id_seq: id_seq IDENTIFIER ',' .
+   14 declaration: INTEGER id_seq IDENTIFIER .
+   15            | INTEGER id_seq IDENTIFIER . '[' NUMBER ']'
+   18 id_seq: id_seq IDENTIFIER . ','
+   19       | id_seq IDENTIFIER . '[' NUMBER ']' ','
 
-    $default  reduce usando la regla 11 (id_seq)
+    '['  desplazar e ir al estado 24
+    ','  desplazar e ir al estado 25
 
+    $default  reduce usando la regla 14 (declaration)
 
-State 24
 
-   19 command: IDENTIFIER . ASSGNOP exp
-   20        | IDENTIFIER . '[' exp ']' ASSGNOP exp
-   31        | IDENTIFIER . '(' exp ')'
+Estado 18
 
-    ASSGNOP  desplazar e ir al estado 37
-    '['      desplazar e ir al estado 38
-    '('      desplazar e ir al estado 39
+   10 function: PROCEDURE . IDENTIFIER '(' id_seq ')' '{' $@5 commands $@6 '}'
 
+    IDENTIFIER  desplazar e ir al estado 26
 
-State 25
 
-   24 command: IF . bool_exp $@3 THEN commands $@4 ELSE $@5 commands FI
+Estado 19
 
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
+    5 program: GO $@1 declarations $@2 functions . MAIN '{' $@3 commands $@4 '}'
 
-    $default  reduce usando la regla 36 (exp)
+    MAIN  desplazar e ir al estado 27
 
-    bool_exp  ir al estado 43
-    exp       ir al estado 44
 
+Estado 20
 
-State 26
+    7 functions: function . functions
 
-   27 command: WHILE . $@6 bool_exp $@7 DO commands END
+    PROCEDURE  desplazar e ir al estado 18
 
-    $default  reduce usando la regla 25 ($@6)
+    $default  reduce usando la regla 6 (functions)
 
-    $@6  ir al estado 45
+    functions  ir al estado 28
+    function   ir al estado 20
 
 
-State 27
+Estado 21
 
-   30 command: PROCEDURE . IDENTIFIER '(' id_seq ')' '{' $@8 commands $@9 '}'
+   12 declarations: declarations declaration '.' .
 
-    IDENTIFIER  desplazar e ir al estado 46
+    $default  reduce usando la regla 12 (declarations)
 
 
-State 28
+Estado 22
 
-   16 command: SKIP .
+   16 declaration: FUNCTION IDENTIFIER '(' id_seq . ')' ':' INTEGER
+   18 id_seq: id_seq . IDENTIFIER ','
+   19       | id_seq . IDENTIFIER '[' NUMBER ']' ','
 
-    $default  reduce usando la regla 16 (command)
+    IDENTIFIER  desplazar e ir al estado 29
+    ')'         desplazar e ir al estado 30
 
 
-State 29
+Estado 23
 
-   17 command: READ . IDENTIFIER
-
-    IDENTIFIER  desplazar e ir al estado 47
-
-
-State 30
-
-   18 command: WRITE . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 48
-
-
-State 31
-
-   32 command: MAIN .
-
-    $default  reduce usando la regla 32 (command)
-
-
-State 32
-
-   15 commands: commands command . ';'
-
-    ';'  desplazar e ir al estado 49
-
-
-State 33
-
-   11 id_seq: id_seq IDENTIFIER . ','
-   12       | id_seq IDENTIFIER . '[' NUMBER ']' ','
-
-    '['  desplazar e ir al estado 50
-    ','  desplazar e ir al estado 23
-
-
-State 34
-
-    9 declaration: FUNCTION IDENTIFIER '(' id_seq ')' . ':' INTEGER
-
-    ':'  desplazar e ir al estado 51
-
-
-State 35
-
-   11 id_seq: id_seq . IDENTIFIER ','
-   12       | id_seq . IDENTIFIER '[' NUMBER ']' ','
-   13       | FUNCTION IDENTIFIER '(' id_seq . ')' ':' INTEGER ','
-
-    IDENTIFIER  desplazar e ir al estado 33
-    ')'         desplazar e ir al estado 52
-
-
-State 36
-
-    8 declaration: INTEGER id_seq IDENTIFIER '[' NUMBER . ']'
-   12 id_seq: id_seq IDENTIFIER '[' NUMBER . ']' ','
-
-    ']'  desplazar e ir al estado 53
-
-
-State 37
-
-   19 command: IDENTIFIER ASSGNOP . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 54
-
-
-State 38
-
-   20 command: IDENTIFIER '[' . exp ']' ASSGNOP exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 55
-
-
-State 39
-
-   31 command: IDENTIFIER '(' . exp ')'
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 56
-
-
-State 40
-
-   37 exp: NUMBER .
-
-    $default  reduce usando la regla 37 (exp)
-
-
-State 41
-
-   38 exp: IDENTIFIER .
-   39    | IDENTIFIER . '[' exp ']'
-   46    | IDENTIFIER . '(' ')'
-
-    '['  desplazar e ir al estado 57
-    '('  desplazar e ir al estado 58
-
-    $default  reduce usando la regla 38 (exp)
-
-
-State 42
-
-   45 exp: '(' . exp ')'
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 59
-
-
-State 43
-
-   24 command: IF bool_exp . $@3 THEN commands $@4 ELSE $@5 commands FI
-
-    $default  reduce usando la regla 21 ($@3)
-
-    $@3  ir al estado 60
-
-
-State 44
-
-   33 bool_exp: exp . '<' exp
-   34         | exp . '=' exp
-   35         | exp . '>' exp
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-    '<'  desplazar e ir al estado 66
-    '='  desplazar e ir al estado 67
-    '>'  desplazar e ir al estado 68
-
-
-State 45
-
-   27 command: WHILE $@6 . bool_exp $@7 DO commands END
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    bool_exp  ir al estado 69
-    exp       ir al estado 44
-
-
-State 46
-
-   30 command: PROCEDURE IDENTIFIER . '(' id_seq ')' '{' $@8 commands $@9 '}'
-
-    '('  desplazar e ir al estado 70
-
-
-State 47
-
-   17 command: READ IDENTIFIER .
-
-    $default  reduce usando la regla 17 (command)
-
-
-State 48
-
-   18 command: WRITE exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 18 (command)
-
-
-State 49
-
-   15 commands: commands command ';' .
-
-    $default  reduce usando la regla 15 (commands)
-
-
-State 50
-
-   12 id_seq: id_seq IDENTIFIER '[' . NUMBER ']' ','
-
-    NUMBER  desplazar e ir al estado 71
-
-
-State 51
-
-    9 declaration: FUNCTION IDENTIFIER '(' id_seq ')' ':' . INTEGER
-
-    INTEGER  desplazar e ir al estado 72
-
-
-State 52
-
-   13 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' . ':' INTEGER ','
-
-    ':'  desplazar e ir al estado 73
-
-
-State 53
-
-    8 declaration: INTEGER id_seq IDENTIFIER '[' NUMBER ']' .
-   12 id_seq: id_seq IDENTIFIER '[' NUMBER ']' . ','
-
-    ','  desplazar e ir al estado 74
-
-    $default  reduce usando la regla 8 (declaration)
-
-
-State 54
-
-   19 command: IDENTIFIER ASSGNOP exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 19 (command)
-
-
-State 55
-
-   20 command: IDENTIFIER '[' exp . ']' ASSGNOP exp
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-    ']'  desplazar e ir al estado 75
-
-
-State 56
-
-   31 command: IDENTIFIER '(' exp . ')'
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-    ')'  desplazar e ir al estado 76
-
-
-State 57
-
-   39 exp: IDENTIFIER '[' . exp ']'
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 77
-
-
-State 58
-
-   46 exp: IDENTIFIER '(' . ')'
-
-    ')'  desplazar e ir al estado 78
-
-
-State 59
-
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-   45    | '(' exp . ')'
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-    ')'  desplazar e ir al estado 79
-
-
-State 60
-
-   24 command: IF bool_exp $@3 . THEN commands $@4 ELSE $@5 commands FI
-
-    THEN  desplazar e ir al estado 80
-
-
-State 61
-
-   41 exp: exp '-' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 81
-
-
-State 62
-
-   40 exp: exp '+' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 82
-
-
-State 63
-
-   42 exp: exp '*' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 83
-
-
-State 64
-
-   43 exp: exp '/' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 84
-
-
-State 65
-
-   44 exp: exp '^' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 85
-
-
-State 66
-
-   33 bool_exp: exp '<' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 86
-
-
-State 67
-
-   34 bool_exp: exp '=' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 87
-
-
-State 68
-
-   35 bool_exp: exp '>' . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 88
-
-
-State 69
-
-   27 command: WHILE $@6 bool_exp . $@7 DO commands END
-
-    $default  reduce usando la regla 26 ($@7)
-
-    $@7  ir al estado 89
-
-
-State 70
-
-   30 command: PROCEDURE IDENTIFIER '(' . id_seq ')' '{' $@8 commands $@9 '}'
+   20 id_seq: FUNCTION IDENTIFIER '(' . id_seq ')' ':' INTEGER ','
 
     FUNCTION  desplazar e ir al estado 10
 
-    $default  reduce usando la regla 10 (id_seq)
+    $default  reduce usando la regla 17 (id_seq)
 
-    id_seq  ir al estado 90
-
-
-State 71
-
-   12 id_seq: id_seq IDENTIFIER '[' NUMBER . ']' ','
-
-    ']'  desplazar e ir al estado 91
+    id_seq  ir al estado 31
 
 
-State 72
+Estado 24
 
-    9 declaration: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER .
+   15 declaration: INTEGER id_seq IDENTIFIER '[' . NUMBER ']'
+   19 id_seq: id_seq IDENTIFIER '[' . NUMBER ']' ','
 
-    $default  reduce usando la regla 9 (declaration)
-
-
-State 73
-
-   13 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' . INTEGER ','
-
-    INTEGER  desplazar e ir al estado 92
+    NUMBER  desplazar e ir al estado 32
 
 
-State 74
+Estado 25
 
-   12 id_seq: id_seq IDENTIFIER '[' NUMBER ']' ',' .
+   18 id_seq: id_seq IDENTIFIER ',' .
 
-    $default  reduce usando la regla 12 (id_seq)
-
-
-State 75
-
-   20 command: IDENTIFIER '[' exp ']' . ASSGNOP exp
-
-    ASSGNOP  desplazar e ir al estado 93
+    $default  reduce usando la regla 18 (id_seq)
 
 
-State 76
+Estado 26
 
-   31 command: IDENTIFIER '(' exp ')' .
+   10 function: PROCEDURE IDENTIFIER . '(' id_seq ')' '{' $@5 commands $@6 '}'
 
-    $default  reduce usando la regla 31 (command)
-
-
-State 77
-
-   39 exp: IDENTIFIER '[' exp . ']'
-   40    | exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-    ']'  desplazar e ir al estado 94
+    '('  desplazar e ir al estado 33
 
 
-State 78
+Estado 27
 
-   46 exp: IDENTIFIER '(' ')' .
+    5 program: GO $@1 declarations $@2 functions MAIN . '{' $@3 commands $@4 '}'
 
-    $default  reduce usando la regla 46 (exp)
-
-
-State 79
-
-   45 exp: '(' exp ')' .
-
-    $default  reduce usando la regla 45 (exp)
+    '{'  desplazar e ir al estado 34
 
 
-State 80
+Estado 28
 
-   24 command: IF bool_exp $@3 THEN . commands $@4 ELSE $@5 commands FI
+    7 functions: function functions .
 
-    $default  reduce usando la regla 14 (commands)
-
-    commands  ir al estado 95
+    $default  reduce usando la regla 7 (functions)
 
 
-State 81
+Estado 29
 
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   41    | exp '-' exp .
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
+   18 id_seq: id_seq IDENTIFIER . ','
+   19       | id_seq IDENTIFIER . '[' NUMBER ']' ','
 
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 41 (exp)
+    '['  desplazar e ir al estado 35
+    ','  desplazar e ir al estado 25
 
 
-State 82
+Estado 30
 
-   40 exp: exp . '+' exp
-   40    | exp '+' exp .
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
+   16 declaration: FUNCTION IDENTIFIER '(' id_seq ')' . ':' INTEGER
 
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
+    ':'  desplazar e ir al estado 36
+
+
+Estado 31
+
+   18 id_seq: id_seq . IDENTIFIER ','
+   19       | id_seq . IDENTIFIER '[' NUMBER ']' ','
+   20       | FUNCTION IDENTIFIER '(' id_seq . ')' ':' INTEGER ','
+
+    IDENTIFIER  desplazar e ir al estado 29
+    ')'         desplazar e ir al estado 37
+
+
+Estado 32
+
+   15 declaration: INTEGER id_seq IDENTIFIER '[' NUMBER . ']'
+   19 id_seq: id_seq IDENTIFIER '[' NUMBER . ']' ','
+
+    ']'  desplazar e ir al estado 38
+
+
+Estado 33
+
+   10 function: PROCEDURE IDENTIFIER '(' . id_seq ')' '{' $@5 commands $@6 '}'
+
+    FUNCTION  desplazar e ir al estado 10
+
+    $default  reduce usando la regla 17 (id_seq)
+
+    id_seq  ir al estado 39
+
+
+Estado 34
+
+    5 program: GO $@1 declarations $@2 functions MAIN '{' . $@3 commands $@4 '}'
+
+    $default  reduce usando la regla 3 ($@3)
+
+    $@3  ir al estado 40
+
+
+Estado 35
+
+   19 id_seq: id_seq IDENTIFIER '[' . NUMBER ']' ','
+
+    NUMBER  desplazar e ir al estado 41
+
+
+Estado 36
+
+   16 declaration: FUNCTION IDENTIFIER '(' id_seq ')' ':' . INTEGER
+
+    INTEGER  desplazar e ir al estado 42
+
+
+Estado 37
+
+   20 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' . ':' INTEGER ','
+
+    ':'  desplazar e ir al estado 43
+
+
+Estado 38
+
+   15 declaration: INTEGER id_seq IDENTIFIER '[' NUMBER ']' .
+   19 id_seq: id_seq IDENTIFIER '[' NUMBER ']' . ','
+
+    ','  desplazar e ir al estado 44
+
+    $default  reduce usando la regla 15 (declaration)
+
+
+Estado 39
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq . ')' '{' $@5 commands $@6 '}'
+   18 id_seq: id_seq . IDENTIFIER ','
+   19       | id_seq . IDENTIFIER '[' NUMBER ']' ','
+
+    IDENTIFIER  desplazar e ir al estado 29
+    ')'         desplazar e ir al estado 45
+
+
+Estado 40
+
+    5 program: GO $@1 declarations $@2 functions MAIN '{' $@3 . commands $@4 '}'
+
+    $default  reduce usando la regla 21 (commands)
+
+    commands  ir al estado 46
+
+
+Estado 41
+
+   19 id_seq: id_seq IDENTIFIER '[' NUMBER . ']' ','
+
+    ']'  desplazar e ir al estado 47
+
+
+Estado 42
+
+   16 declaration: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER .
+
+    $default  reduce usando la regla 16 (declaration)
+
+
+Estado 43
+
+   20 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' . INTEGER ','
+
+    INTEGER  desplazar e ir al estado 48
+
+
+Estado 44
+
+   19 id_seq: id_seq IDENTIFIER '[' NUMBER ']' ',' .
+
+    $default  reduce usando la regla 19 (id_seq)
+
+
+Estado 45
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' . '{' $@5 commands $@6 '}'
+
+    '{'  desplazar e ir al estado 49
+
+
+Estado 46
+
+    5 program: GO $@1 declarations $@2 functions MAIN '{' $@3 commands . $@4 '}'
+   22 commands: commands . command ';'
+
+    IDENTIFIER  desplazar e ir al estado 50
+    IF          desplazar e ir al estado 51
+    WHILE       desplazar e ir al estado 52
+    SKIP        desplazar e ir al estado 53
+    READ        desplazar e ir al estado 54
+    WRITE       desplazar e ir al estado 55
+
+    $default  reduce usando la regla 4 ($@4)
+
+    $@4      ir al estado 56
+    command  ir al estado 57
+
+
+Estado 47
+
+   19 id_seq: id_seq IDENTIFIER '[' NUMBER ']' . ','
+
+    ','  desplazar e ir al estado 44
+
+
+Estado 48
+
+   20 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER . ','
+
+    ','  desplazar e ir al estado 58
+
+
+Estado 49
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' . $@5 commands $@6 '}'
+
+    $default  reduce usando la regla 8 ($@5)
+
+    $@5  ir al estado 59
+
+
+Estado 50
+
+   26 command: IDENTIFIER . ASSGNOP exp
+   27        | IDENTIFIER . '[' exp ']' ASSGNOP exp
+   35        | IDENTIFIER . '(' exp ')'
+
+    ASSGNOP  desplazar e ir al estado 60
+    '('      desplazar e ir al estado 61
+    '['      desplazar e ir al estado 62
+
+
+Estado 51
+
+   31 command: IF . bool_exp $@7 THEN commands $@8 ELSE $@9 commands FI
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    bool_exp  ir al estado 66
+    exp       ir al estado 67
+
+
+Estado 52
+
+   34 command: WHILE . $@10 bool_exp $@11 DO commands END
+
+    $default  reduce usando la regla 32 ($@10)
+
+    $@10  ir al estado 68
+
+
+Estado 53
+
+   23 command: SKIP .
+
+    $default  reduce usando la regla 23 (command)
+
+
+Estado 54
+
+   24 command: READ . IDENTIFIER
+
+    IDENTIFIER  desplazar e ir al estado 69
+
+
+Estado 55
+
+   25 command: WRITE . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 70
+
+
+Estado 56
+
+    5 program: GO $@1 declarations $@2 functions MAIN '{' $@3 commands $@4 . '}'
+
+    '}'  desplazar e ir al estado 71
+
+
+Estado 57
+
+   22 commands: commands command . ';'
+
+    ';'  desplazar e ir al estado 72
+
+
+Estado 58
+
+   20 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ',' .
+
+    $default  reduce usando la regla 20 (id_seq)
+
+
+Estado 59
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@5 . commands $@6 '}'
+
+    $default  reduce usando la regla 21 (commands)
+
+    commands  ir al estado 73
+
+
+Estado 60
+
+   26 command: IDENTIFIER ASSGNOP . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 74
+
+
+Estado 61
+
+   35 command: IDENTIFIER '(' . exp ')'
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 75
+
+
+Estado 62
+
+   27 command: IDENTIFIER '[' . exp ']' ASSGNOP exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 76
+
+
+Estado 63
+
+   40 exp: NUMBER .
 
     $default  reduce usando la regla 40 (exp)
 
 
-State 83
+Estado 64
 
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   42    | exp '*' exp .
-   43    | exp . '/' exp
-   44    | exp . '^' exp
+   41 exp: IDENTIFIER .
+   42    | IDENTIFIER . '[' exp ']'
+   49    | IDENTIFIER . '(' ')'
 
-    '^'  desplazar e ir al estado 65
+    '('  desplazar e ir al estado 77
+    '['  desplazar e ir al estado 78
 
-    $default  reduce usando la regla 42 (exp)
+    $default  reduce usando la regla 41 (exp)
 
 
-State 84
+Estado 65
 
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   43    | exp '/' exp .
-   44    | exp . '^' exp
+   48 exp: '(' . exp ')'
 
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 43 (exp)
-
-
-State 85
-
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-   44    | exp '^' exp .
-
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 44 (exp)
-
-
-State 86
-
-   33 bool_exp: exp '<' exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 33 (bool_exp)
-
-
-State 87
-
-   34 bool_exp: exp '=' exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 34 (bool_exp)
-
-
-State 88
-
-   35 bool_exp: exp '>' exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 35 (bool_exp)
-
-
-State 89
-
-   27 command: WHILE $@6 bool_exp $@7 . DO commands END
-
-    DO  desplazar e ir al estado 96
-
-
-State 90
-
-   11 id_seq: id_seq . IDENTIFIER ','
-   12       | id_seq . IDENTIFIER '[' NUMBER ']' ','
-   30 command: PROCEDURE IDENTIFIER '(' id_seq . ')' '{' $@8 commands $@9 '}'
-
-    IDENTIFIER  desplazar e ir al estado 33
-    ')'         desplazar e ir al estado 97
-
-
-State 91
-
-   12 id_seq: id_seq IDENTIFIER '[' NUMBER ']' . ','
-
-    ','  desplazar e ir al estado 74
-
-
-State 92
-
-   13 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER . ','
-
-    ','  desplazar e ir al estado 98
-
-
-State 93
-
-   20 command: IDENTIFIER '[' exp ']' ASSGNOP . exp
-
-    NUMBER      desplazar e ir al estado 40
-    IDENTIFIER  desplazar e ir al estado 41
-    '('         desplazar e ir al estado 42
-
-    $default  reduce usando la regla 36 (exp)
-
-    exp  ir al estado 99
-
-
-State 94
-
-   39 exp: IDENTIFIER '[' exp ']' .
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
 
     $default  reduce usando la regla 39 (exp)
 
+    exp  ir al estado 79
 
-State 95
 
-   15 commands: commands . command ';'
-   24 command: IF bool_exp $@3 THEN commands . $@4 ELSE $@5 commands FI
+Estado 66
 
-    IDENTIFIER  desplazar e ir al estado 24
-    IF          desplazar e ir al estado 25
-    WHILE       desplazar e ir al estado 26
-    PROCEDURE   desplazar e ir al estado 27
-    SKIP        desplazar e ir al estado 28
-    READ        desplazar e ir al estado 29
-    WRITE       desplazar e ir al estado 30
-    MAIN        desplazar e ir al estado 31
+   31 command: IF bool_exp . $@7 THEN commands $@8 ELSE $@9 commands FI
 
-    $default  reduce usando la regla 22 ($@4)
+    $default  reduce usando la regla 28 ($@7)
 
-    command  ir al estado 32
-    $@4      ir al estado 100
+    $@7  ir al estado 80
 
 
-State 96
+Estado 67
 
-   27 command: WHILE $@6 bool_exp $@7 DO . commands END
+   36 bool_exp: exp . '<' exp
+   37         | exp . '=' exp
+   38         | exp . '>' exp
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
 
-    $default  reduce usando la regla 14 (commands)
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+    '<'  desplazar e ir al estado 86
+    '='  desplazar e ir al estado 87
+    '>'  desplazar e ir al estado 88
 
-    commands  ir al estado 101
 
+Estado 68
 
-State 97
+   34 command: WHILE $@10 . bool_exp $@11 DO commands END
 
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' . '{' $@8 commands $@9 '}'
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
 
-    '{'  desplazar e ir al estado 102
+    $default  reduce usando la regla 39 (exp)
 
+    bool_exp  ir al estado 89
+    exp       ir al estado 67
 
-State 98
 
-   13 id_seq: FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ',' .
+Estado 69
 
-    $default  reduce usando la regla 13 (id_seq)
-
-
-State 99
-
-   20 command: IDENTIFIER '[' exp ']' ASSGNOP exp .
-   40 exp: exp . '+' exp
-   41    | exp . '-' exp
-   42    | exp . '*' exp
-   43    | exp . '/' exp
-   44    | exp . '^' exp
-
-    '-'  desplazar e ir al estado 61
-    '+'  desplazar e ir al estado 62
-    '*'  desplazar e ir al estado 63
-    '/'  desplazar e ir al estado 64
-    '^'  desplazar e ir al estado 65
-
-    $default  reduce usando la regla 20 (command)
-
-
-State 100
-
-   24 command: IF bool_exp $@3 THEN commands $@4 . ELSE $@5 commands FI
-
-    ELSE  desplazar e ir al estado 103
-
-
-State 101
-
-   15 commands: commands . command ';'
-   27 command: WHILE $@6 bool_exp $@7 DO commands . END
-
-    IDENTIFIER  desplazar e ir al estado 24
-    IF          desplazar e ir al estado 25
-    WHILE       desplazar e ir al estado 26
-    PROCEDURE   desplazar e ir al estado 27
-    SKIP        desplazar e ir al estado 28
-    END         desplazar e ir al estado 104
-    READ        desplazar e ir al estado 29
-    WRITE       desplazar e ir al estado 30
-    MAIN        desplazar e ir al estado 31
-
-    command  ir al estado 32
-
-
-State 102
-
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' . $@8 commands $@9 '}'
-
-    $default  reduce usando la regla 28 ($@8)
-
-    $@8  ir al estado 105
-
-
-State 103
-
-   24 command: IF bool_exp $@3 THEN commands $@4 ELSE . $@5 commands FI
-
-    $default  reduce usando la regla 23 ($@5)
-
-    $@5  ir al estado 106
-
-
-State 104
-
-   27 command: WHILE $@6 bool_exp $@7 DO commands END .
-
-    $default  reduce usando la regla 27 (command)
-
-
-State 105
-
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@8 . commands $@9 '}'
-
-    $default  reduce usando la regla 14 (commands)
-
-    commands  ir al estado 107
-
-
-State 106
-
-   24 command: IF bool_exp $@3 THEN commands $@4 ELSE $@5 . commands FI
-
-    $default  reduce usando la regla 14 (commands)
-
-    commands  ir al estado 108
-
-
-State 107
-
-   15 commands: commands . command ';'
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@8 commands . $@9 '}'
-
-    IDENTIFIER  desplazar e ir al estado 24
-    IF          desplazar e ir al estado 25
-    WHILE       desplazar e ir al estado 26
-    PROCEDURE   desplazar e ir al estado 27
-    SKIP        desplazar e ir al estado 28
-    READ        desplazar e ir al estado 29
-    WRITE       desplazar e ir al estado 30
-    MAIN        desplazar e ir al estado 31
-
-    $default  reduce usando la regla 29 ($@9)
-
-    command  ir al estado 32
-    $@9      ir al estado 109
-
-
-State 108
-
-   15 commands: commands . command ';'
-   24 command: IF bool_exp $@3 THEN commands $@4 ELSE $@5 commands . FI
-
-    IDENTIFIER  desplazar e ir al estado 24
-    IF          desplazar e ir al estado 25
-    WHILE       desplazar e ir al estado 26
-    PROCEDURE   desplazar e ir al estado 27
-    SKIP        desplazar e ir al estado 28
-    FI          desplazar e ir al estado 110
-    READ        desplazar e ir al estado 29
-    WRITE       desplazar e ir al estado 30
-    MAIN        desplazar e ir al estado 31
-
-    command  ir al estado 32
-
-
-State 109
-
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@8 commands $@9 . '}'
-
-    '}'  desplazar e ir al estado 111
-
-
-State 110
-
-   24 command: IF bool_exp $@3 THEN commands $@4 ELSE $@5 commands FI .
+   24 command: READ IDENTIFIER .
 
     $default  reduce usando la regla 24 (command)
 
 
-State 111
+Estado 70
 
-   30 command: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@8 commands $@9 '}' .
+   25 command: WRITE exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
 
-    $default  reduce usando la regla 30 (command)
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 25 (command)
+
+
+Estado 71
+
+    5 program: GO $@1 declarations $@2 functions MAIN '{' $@3 commands $@4 '}' .
+
+    $default  reduce usando la regla 5 (program)
+
+
+Estado 72
+
+   22 commands: commands command ';' .
+
+    $default  reduce usando la regla 22 (commands)
+
+
+Estado 73
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@5 commands . $@6 '}'
+   22 commands: commands . command ';'
+
+    IDENTIFIER  desplazar e ir al estado 50
+    IF          desplazar e ir al estado 51
+    WHILE       desplazar e ir al estado 52
+    SKIP        desplazar e ir al estado 53
+    READ        desplazar e ir al estado 54
+    WRITE       desplazar e ir al estado 55
+
+    $default  reduce usando la regla 9 ($@6)
+
+    $@6      ir al estado 90
+    command  ir al estado 57
+
+
+Estado 74
+
+   26 command: IDENTIFIER ASSGNOP exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 26 (command)
+
+
+Estado 75
+
+   35 command: IDENTIFIER '(' exp . ')'
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+    ')'  desplazar e ir al estado 91
+
+
+Estado 76
+
+   27 command: IDENTIFIER '[' exp . ']' ASSGNOP exp
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+    ']'  desplazar e ir al estado 92
+
+
+Estado 77
+
+   49 exp: IDENTIFIER '(' . ')'
+
+    ')'  desplazar e ir al estado 93
+
+
+Estado 78
+
+   42 exp: IDENTIFIER '[' . exp ']'
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 94
+
+
+Estado 79
+
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+   48    | '(' exp . ')'
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+    ')'  desplazar e ir al estado 95
+
+
+Estado 80
+
+   31 command: IF bool_exp $@7 . THEN commands $@8 ELSE $@9 commands FI
+
+    THEN  desplazar e ir al estado 96
+
+
+Estado 81
+
+   44 exp: exp '-' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 97
+
+
+Estado 82
+
+   43 exp: exp '+' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 98
+
+
+Estado 83
+
+   45 exp: exp '*' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 99
+
+
+Estado 84
+
+   46 exp: exp '/' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 100
+
+
+Estado 85
+
+   47 exp: exp '^' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 101
+
+
+Estado 86
+
+   36 bool_exp: exp '<' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 102
+
+
+Estado 87
+
+   37 bool_exp: exp '=' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 103
+
+
+Estado 88
+
+   38 bool_exp: exp '>' . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 104
+
+
+Estado 89
+
+   34 command: WHILE $@10 bool_exp . $@11 DO commands END
+
+    $default  reduce usando la regla 33 ($@11)
+
+    $@11  ir al estado 105
+
+
+Estado 90
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@5 commands $@6 . '}'
+
+    '}'  desplazar e ir al estado 106
+
+
+Estado 91
+
+   35 command: IDENTIFIER '(' exp ')' .
+
+    $default  reduce usando la regla 35 (command)
+
+
+Estado 92
+
+   27 command: IDENTIFIER '[' exp ']' . ASSGNOP exp
+
+    ASSGNOP  desplazar e ir al estado 107
+
+
+Estado 93
+
+   49 exp: IDENTIFIER '(' ')' .
+
+    $default  reduce usando la regla 49 (exp)
+
+
+Estado 94
+
+   42 exp: IDENTIFIER '[' exp . ']'
+   43    | exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+    ']'  desplazar e ir al estado 108
+
+
+Estado 95
+
+   48 exp: '(' exp ')' .
+
+    $default  reduce usando la regla 48 (exp)
+
+
+Estado 96
+
+   31 command: IF bool_exp $@7 THEN . commands $@8 ELSE $@9 commands FI
+
+    $default  reduce usando la regla 21 (commands)
+
+    commands  ir al estado 109
+
+
+Estado 97
+
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   44    | exp '-' exp .
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 44 (exp)
+
+
+Estado 98
+
+   43 exp: exp . '+' exp
+   43    | exp '+' exp .
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 43 (exp)
+
+
+Estado 99
+
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   45    | exp '*' exp .
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 45 (exp)
+
+
+Estado 100
+
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   46    | exp '/' exp .
+   47    | exp . '^' exp
+
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 46 (exp)
+
+
+Estado 101
+
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+   47    | exp '^' exp .
+
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 47 (exp)
+
+
+Estado 102
+
+   36 bool_exp: exp '<' exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 36 (bool_exp)
+
+
+Estado 103
+
+   37 bool_exp: exp '=' exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 37 (bool_exp)
+
+
+Estado 104
+
+   38 bool_exp: exp '>' exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 38 (bool_exp)
+
+
+Estado 105
+
+   34 command: WHILE $@10 bool_exp $@11 . DO commands END
+
+    DO  desplazar e ir al estado 110
+
+
+Estado 106
+
+   10 function: PROCEDURE IDENTIFIER '(' id_seq ')' '{' $@5 commands $@6 '}' .
+
+    $default  reduce usando la regla 10 (function)
+
+
+Estado 107
+
+   27 command: IDENTIFIER '[' exp ']' ASSGNOP . exp
+
+    NUMBER      desplazar e ir al estado 63
+    IDENTIFIER  desplazar e ir al estado 64
+    '('         desplazar e ir al estado 65
+
+    $default  reduce usando la regla 39 (exp)
+
+    exp  ir al estado 111
+
+
+Estado 108
+
+   42 exp: IDENTIFIER '[' exp ']' .
+
+    $default  reduce usando la regla 42 (exp)
+
+
+Estado 109
+
+   22 commands: commands . command ';'
+   31 command: IF bool_exp $@7 THEN commands . $@8 ELSE $@9 commands FI
+
+    IDENTIFIER  desplazar e ir al estado 50
+    IF          desplazar e ir al estado 51
+    WHILE       desplazar e ir al estado 52
+    SKIP        desplazar e ir al estado 53
+    READ        desplazar e ir al estado 54
+    WRITE       desplazar e ir al estado 55
+
+    $default  reduce usando la regla 29 ($@8)
+
+    command  ir al estado 57
+    $@8      ir al estado 112
+
+
+Estado 110
+
+   34 command: WHILE $@10 bool_exp $@11 DO . commands END
+
+    $default  reduce usando la regla 21 (commands)
+
+    commands  ir al estado 113
+
+
+Estado 111
+
+   27 command: IDENTIFIER '[' exp ']' ASSGNOP exp .
+   43 exp: exp . '+' exp
+   44    | exp . '-' exp
+   45    | exp . '*' exp
+   46    | exp . '/' exp
+   47    | exp . '^' exp
+
+    '-'  desplazar e ir al estado 81
+    '+'  desplazar e ir al estado 82
+    '*'  desplazar e ir al estado 83
+    '/'  desplazar e ir al estado 84
+    '^'  desplazar e ir al estado 85
+
+    $default  reduce usando la regla 27 (command)
+
+
+Estado 112
+
+   31 command: IF bool_exp $@7 THEN commands $@8 . ELSE $@9 commands FI
+
+    ELSE  desplazar e ir al estado 114
+
+
+Estado 113
+
+   22 commands: commands . command ';'
+   34 command: WHILE $@10 bool_exp $@11 DO commands . END
+
+    IDENTIFIER  desplazar e ir al estado 50
+    IF          desplazar e ir al estado 51
+    WHILE       desplazar e ir al estado 52
+    SKIP        desplazar e ir al estado 53
+    END         desplazar e ir al estado 115
+    READ        desplazar e ir al estado 54
+    WRITE       desplazar e ir al estado 55
+
+    command  ir al estado 57
+
+
+Estado 114
+
+   31 command: IF bool_exp $@7 THEN commands $@8 ELSE . $@9 commands FI
+
+    $default  reduce usando la regla 30 ($@9)
+
+    $@9  ir al estado 116
+
+
+Estado 115
+
+   34 command: WHILE $@10 bool_exp $@11 DO commands END .
+
+    $default  reduce usando la regla 34 (command)
+
+
+Estado 116
+
+   31 command: IF bool_exp $@7 THEN commands $@8 ELSE $@9 . commands FI
+
+    $default  reduce usando la regla 21 (commands)
+
+    commands  ir al estado 117
+
+
+Estado 117
+
+   22 commands: commands . command ';'
+   31 command: IF bool_exp $@7 THEN commands $@8 ELSE $@9 commands . FI
+
+    IDENTIFIER  desplazar e ir al estado 50
+    IF          desplazar e ir al estado 51
+    WHILE       desplazar e ir al estado 52
+    SKIP        desplazar e ir al estado 53
+    FI          desplazar e ir al estado 118
+    READ        desplazar e ir al estado 54
+    WRITE       desplazar e ir al estado 55
+
+    command  ir al estado 57
+
+
+Estado 118
+
+   31 command: IF bool_exp $@7 THEN commands $@8 ELSE $@9 commands FI .
+
+    $default  reduce usando la regla 31 (command)
