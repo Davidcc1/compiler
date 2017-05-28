@@ -1411,7 +1411,7 @@ yyreduce:
 
   case 5:
 #line 120 "senzillc.y" /* yacc.c:1646  */
-    { gen_code( HALT, 0 ); YYACCEPT; }
+    { gen_code( HALT, 0 ); YYACCEPT; yyerrok; yyclearin; }
 #line 1416 "senzillc.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1882,7 +1882,7 @@ extern int num_line;
 int yyerror ( char *s ) /* Called by yyparse on error */
 {
   errors++;
-  printf ("%d: %s\n", num_line, s);
+  printf ("%s in line: %d\n", s, num_line);
   return 0;
 }
 /**************************** End Grammar File ***************************/

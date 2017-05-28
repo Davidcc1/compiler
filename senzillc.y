@@ -3,6 +3,7 @@
 Compiler for the Simple language
 Author: Anthony A. Aaby
 Modified by: Jordi Planes
+Modified again by: David Castillo
 ***************************************************************************/
 /*=========================================================================
 C Libraries, Symbol Table, Code Generator & other C code
@@ -117,7 +118,7 @@ program : 	 GO { reserve_loc();}
 			       declarations { gen_code( DATA, data_location() - 1 ); }
              functions
              MAIN '{'{ back_patch( 0, GOTO, gen_label());}
-             commands { gen_code( HALT, 0 ); YYACCEPT; }
+             commands { gen_code( HALT, 0 ); YYACCEPT; yyerrok; yyclearin; }
              '}'
 ;
 
@@ -126,8 +127,8 @@ functions: /*empty*/
 ;
 
 function:   PROCEDURE IDENTIFIER '(' id_seq ')' '{'
-            { 	$1 = (struct lbs *) newlblrec(); /*$1->for_fun = gen_label();*/   install2($2,1); }
-            commands { }
+            { 	$1 = (struct lbs *) newlblrec(); install2($2,1); }
+            commands
             '}' { gen_code( RET, 0); }
 
 declarations : declaration '.'
@@ -162,11 +163,7 @@ command : SKIP
    | WHILE { $1 = (struct lbs *) newlblrec(); $1->for_goto = gen_label(); }
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto );
    back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
-   //| PROCEDURE IDENTIFIER '(' id_seq ')' '{'
-   //{ 	$1 = (struct lbs *) newlblrec(); /*$1->for_fun = gen_label();*/   install2($2,1); }
-   //commands { }
-   //'}' { gen_code( RET, 0); }
-   | IDENTIFIER '(' exp ')' { gen_code( CALL , context_check( $1 ) ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
+   | IDENTIFIER '(' exp ')' { gen_code( CALL , context_check( $1 ) ); }
 
 ;
 
@@ -185,7 +182,7 @@ exp :/*empty*/
    	| exp '/' exp { gen_code( DIV, 0 ); }
    	| exp '^' exp { gen_code( PWR, 0 ); }
    	| '(' exp ')'
-   	| IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 ) ); /*back_patch( $1->for_fun, GOTO, gen_label());*/}
+   	| IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 ) ); }
 ;
 
 %%
@@ -224,7 +221,7 @@ extern int num_line;
 int yyerror ( char *s ) /* Called by yyparse on error */
 {
   errors++;
-  printf ("%d: %s\n", num_line, s);
+  printf ("%s in line: %d\n", s, num_line);
   return 0;
 }
 /**************************** End Grammar File ***************************/

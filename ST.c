@@ -2,6 +2,7 @@
 Symbol Table Module 
 Author: Anthony A. Aaby
 Modified by: Jordi Planes
+Modified again by: David Castillo
 ***************************************************************************/ 
 
 #include <stdio.h>
