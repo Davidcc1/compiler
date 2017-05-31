@@ -78,7 +78,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 83 "senzillc.y" /* yacc.c:1909  */
+#line 82 "senzillc.y" /* yacc.c:1909  */
 
    int intval; /* Integer values */
    char *id; /* Identifiers */

@@ -1,5 +1,0 @@
-include tests/test5.sz
-
-write n;
-
-

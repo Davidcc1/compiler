@@ -19,7 +19,6 @@ C Libraries, Symbol Table, Code Generator & other C code
 
 int yyerror(char *);
 int yylex();
-int funcio;
 
 int errors; /* Error Count */
 /*-------------------------------------------------------------------------
@@ -29,7 +28,6 @@ struct lbs /* Labels for data, if and while */
 {
   int for_goto;
   int for_jmp_false;
-  int for_fun;
 };
 
 struct lbs * newlblrec() /* Allocate space for the labels */
@@ -114,22 +112,27 @@ GRAMMAR RULES for the Simple language
 
 %%
 
-program : 	 GO { reserve_loc();}
-			       declarations { gen_code( DATA, data_location() - 1 ); }
-             functions
-             MAIN '{'{ back_patch( 0, GOTO, gen_label());}
-             commands { gen_code( HALT, 0 ); YYACCEPT; yyerrok; yyclearin; }
-             '}'
+program :   GO {reserve_loc();}
+	    declarations { gen_code( DATA, data_location() ); }
+	    functions
+	    MAIN '{' {back_patch(0,GOTO,gen_label());} 
+            commands { gen_code( HALT, 0 ); YYACCEPT; }
+	    '}'
+	    | declarations { gen_code( DATA, data_location() ); }
+	    commands { gen_code( HALT, 0 ); YYACCEPT; }
+            
 ;
 
 functions: /*empty*/
           | function functions
 ;
 
-function:   PROCEDURE IDENTIFIER '(' id_seq ')' '{'
+function:   PROCEDURE IDENTIFIER '(' declaration ')' '{'
             { 	$1 = (struct lbs *) newlblrec(); install2($2,1); }
             commands
             '}' { gen_code( RET, 0); }
+	    | error {yyerrok;}
+;
 
 declarations : declaration '.'
 	| declarations declaration '.'
@@ -138,13 +141,15 @@ declarations : declaration '.'
 declaration : /* empty */
     | INTEGER id_seq IDENTIFIER { install( $3 , 1); }
     | INTEGER id_seq IDENTIFIER '[' NUMBER ']' { install($3,$5);}
-    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER {/*DO SOETHING*/}
+    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER  {}
+
 ;
 
 id_seq : /* empty */
+
     | id_seq IDENTIFIER ',' { install( $2, 1); }
     | id_seq IDENTIFIER '[' NUMBER ']' ',' { install($2,$4); }
-    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ',' {/*DO SOETHING*/}
+    | FUNCTION IDENTIFIER '(' id_seq ')' ':' INTEGER ',' {}
 ;
 
 commands : /* empty */
@@ -163,7 +168,8 @@ command : SKIP
    | WHILE { $1 = (struct lbs *) newlblrec(); $1->for_goto = gen_label(); }
    bool_exp { $1->for_jmp_false = reserve_loc(); } DO commands END { gen_code( GOTO, $1->for_goto );
    back_patch( $1->for_jmp_false, JMP_FALSE, gen_label() ); }
-   | IDENTIFIER '(' exp ')' { gen_code( CALL , context_check( $1 ) ); }
+   | IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 ) ); }
+
 
 ;
 
@@ -182,7 +188,7 @@ exp :/*empty*/
    	| exp '/' exp { gen_code( DIV, 0 ); }
    	| exp '^' exp { gen_code( PWR, 0 ); }
    	| '(' exp ')'
-   	| IDENTIFIER '(' ')' { gen_code( CALL , context_check( $1 ) ); }
+   	| IDENTIFIER '(' exp ')' { gen_code( CALL , context_check( $1 ) ); }
 ;
 
 %%
