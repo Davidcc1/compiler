@@ -1,0 +1,8 @@
+
+
+integer a,b.
+
+read a;
+read b;
+write a;
+write b;

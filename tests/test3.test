@@ -1,0 +1,19 @@
+
+integer n,m,x,a[3].
+read n; 
+x := 1;
+m := 1;
+a[0] := n;
+a[1] := n*2;
+a[2] := n*3;
+while x < n do 
+   m := x*m; 
+   x := x+1; 
+end; 
+   skip; 
+   write m; 
+   write a[0];
+   write a[1];
+   write a[2];
+   write x; 
+

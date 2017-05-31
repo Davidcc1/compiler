@@ -1,0 +1,18 @@
+
+integer n,m,x,p[5].
+ 
+read n; 
+x := 0;
+m := 1;
+p[0] := 0;
+p[1] := p[0]+1;
+while x < n do
+	
+   p[1] := p[1]+2; 
+   m := x*m; 
+   x := x+1; 
+end; 
+   skip;
+   write p[1]; 
+   write n;
+   write x; 

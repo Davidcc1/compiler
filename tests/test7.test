@@ -1,0 +1,15 @@
+lets go:
+function f():integer.
+integer n,m,x,k.
+
+procedure f(){
+read m;
+write m*10;
+}
+main(){
+f();
+
+x := 1;
+read k;
+write k*4;
+}
